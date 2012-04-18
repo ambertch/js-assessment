@@ -27,15 +27,20 @@ define([ 'use!underscore' ], function(_) {
 
     it("you should be able to alter the context in which a method runs", function() {
       // define a function for fn so that the following will pass
+      fn = function() {
+        return a.sayIt.apply(b);
+      }
       expect(fn()).to.be('Yo, Rebecca!');
     });
 
     it("you should be able to alter multiple objects at once", function() {
       // define a function for fn so that the following will pass
-      var obj1 = new C('Rebecca'),
-          obj2 = new C('Melissa'),
-          greeting = "What's up";
-
+      var obj1 = new C('Rebecca');
+      var obj2 = new C('Melissa');
+      var greeting = "What's up";
+      fn = function(greeting) {
+        Object.prototype.greeting = greeting;
+      };
       fn(greeting);
 
       expect(obj1.greeting).to.be(greeting);
@@ -54,6 +59,15 @@ define([ 'use!underscore' ], function(_) {
 
       var obj = new C();
 
+      fn = function(obj) {
+        var array = [];
+        for (var attr in obj) {
+          if(obj.hasOwnProperty(attr)) {
+            array.push(attr + ": " + obj[attr])
+          };
+        }
+        return array;
+      };
       expect(fn(obj)).to.eql([ 'foo: bar', 'baz: bim' ]);
     });
   });

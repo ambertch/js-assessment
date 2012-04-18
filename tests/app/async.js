@@ -11,6 +11,7 @@ define([ 'jquery', 'use!underscore' ], function($, _) {
 
       fn = function() {
         // write a function that makes the test pass
+        return $.when(true)
       };
 
       fn().then(function(result) {
@@ -34,7 +35,14 @@ define([ 'jquery', 'use!underscore' ], function($, _) {
       // tests function once the data has been a) retrieved from the server and
       // b) manipulated so the tests will pass.
 
-      tests();
+      // tests();
+      $.when( $.ajax(url) ).then(function(blah){
+        peopleArray = _(blah.people).map(function(person){
+          return person.name
+        });
+        _(peopleArray).sort();
+        tests();
+      });
     });
   });
 });
